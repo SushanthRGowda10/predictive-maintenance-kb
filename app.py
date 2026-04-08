@@ -17,6 +17,7 @@ st.set_page_config(
 MODEL_PATH = "models/predictive_model.pkl"
 model = joblib.load(MODEL_PATH)
 
+# ✅ MUST match trained model exactly
 FEATURE_COLUMNS = [
     "temperature",
     "vibration",
@@ -71,6 +72,7 @@ if st.button("Predict Failure Risk"):
 
     severity = get_severity(risk_score)
 
+    # ✅ EXACT trained schema
     input_data = pd.DataFrame([[
         temperature,
         vibration,
@@ -78,8 +80,8 @@ if st.button("Predict Failure Risk"):
         runtime_hours,
         maintenance_history,
         error_count,
-        1,
-        0
+        1,  # machine_type_Motor
+        0   # machine_type_Pump
     ]], columns=FEATURE_COLUMNS)
 
     prediction = model.predict(input_data)[0]
@@ -94,7 +96,6 @@ if st.button("Predict Failure Risk"):
     st.warning(f"Severity Level: {severity}")
     st.info(recommendation)
 
-    # ✅ PDF REPORT
     if st.button("Generate PDF Report"):
         generate_report(
             "maintenance_report.pdf",
@@ -177,7 +178,7 @@ k2.metric("⚠️ Average Fleet Risk", f"{fleet_df['Risk Score'].mean():.1f}")
 k3.metric("⏱️ Total Downtime", f"{fleet_df['Downtime Hours'].sum():.1f} hrs")
 
 # ---------------- TABLE ----------------
-st.dataframe(fleet_df, width="stretch")
+st.dataframe(fleet_df, use_container_width=True)
 
 # ---------------- ALERTS ----------------
 critical_df = fleet_df[fleet_df["Risk Score"] > 80]
@@ -186,7 +187,7 @@ st.subheader("🚨 Critical Machine Alerts")
 st.error(f"{len(critical_df)} machines need immediate maintenance")
 
 if not critical_df.empty:
-    st.dataframe(critical_df, width="stretch")
+    st.dataframe(critical_df, use_container_width=True)
 
 # ---------------- CHARTS ----------------
 st.subheader("📊 Fleet Risk Distribution")
