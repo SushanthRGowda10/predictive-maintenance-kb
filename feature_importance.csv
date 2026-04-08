@@ -1,0 +1,5 @@
+Feature,Importance
+vibration,0.29
+temperature,0.25
+pressure,0.24
+runtime_hours,0.22
