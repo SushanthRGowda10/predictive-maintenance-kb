@@ -4,5 +4,4 @@ __pycache__/
 *.pyo
 *.pkl
 .DS_Store
-.streamlit/
 screenshots/
